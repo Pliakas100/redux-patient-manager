@@ -1,26 +1,63 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header';
+import AddMeeting from './components/AddMeeting';
+import MeetingList from './components/MeetingList';
+
+//Redux
+import { Provider } from 'react-redux';
+import store from './store';
 
 class App extends Component {
+
+
+  componentDidMount(){
+    const meetingsLS = localStorage.getItem('meetings');
+
+    if(meetingsLS){
+      this.setState({
+        meetings: JSON.parse(meetingsLS)
+      })
+    }
+  }
+
+  //
+  componentDidUpdate(){
+    localStorage.setItem(
+      'meetings',
+      JSON.stringify(this.state.meetings)
+    )
+  }
+
+
+  deleteMeeting = id => {
+    //state copy
+    const actualMeetings = this.state.meetings; 
+
+    const meetings = actualMeetings.filter(meeting => meeting.id !== id);
+
+    this.setState({meetings});
+
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Provider store={store}>
+        <div className="container">
+          <Header
+            title="Patient manager"
+          />
+          <div className="row">
+            <div className="col-md-6">
+              <AddMeeting/>
+            </div>
+            <div className="col-md-6">
+              <MeetingList
+                deleteMeeting={this.deleteMeeting}
+              />
+            </div>
+          </div>
+        </div>
+      </Provider>
     );
   }
 }

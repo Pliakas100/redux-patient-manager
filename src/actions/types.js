@@ -1,0 +1,3 @@
+export const SHOW_MEETINGS = 'SHOW_MEETINGS';
+export const ADD_MEETING = 'ADD_MEETING';
+export const DELETE_MEETING = 'DELETE_MEETING';
